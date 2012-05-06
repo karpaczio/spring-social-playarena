@@ -14,7 +14,7 @@ import pl.playarena.api.http.client.PlayarenaOAuthClientHttpRequestFactory;
 
 public class PlayarenaTemplate extends AbstractOAuth2ApiBinding implements Playarena {
 
-    private static final String PLAYARENA_URL_BASE = "http://api.playarena.pl:8080/gospa-0.1";
+    private static final String PLAYARENA_URL_BASE = "http://api.playarena.pl";
     private static final LinkedMultiValueMap<String, String> EMPTY_PARAMETERS = new LinkedMultiValueMap<String, String>();
 
     public Profile getCurrentUserProfile() {
