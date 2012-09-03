@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.playarena</groupId>
   <artifactId>spring-social-playarena</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,12 +19,19 @@
 		<org.springframework.security.oauth.spring-security-oauth.version>1.0.0.M4</org.springframework.security.oauth.spring-security-oauth.version>
 		<org.springframework.social.spring-social-core.version>1.0.2.RELEASE</org.springframework.social.spring-social-core.version>
 		<org.springframework.version>3.1.0.RELEASE</org.springframework.version>
+		<org.apache.shindig.shindig-common>2.0.2</org.apache.shindig.shindig-common>
+		<pl.nk.spring-social-nk>1.0.1</pl.nk.spring-social-nk>
 
 		<junit.junit.version>4.10</junit.junit.version>
 		<org.mockito.mockito-all.version>1.9.0</org.mockito.mockito-all.version>
 	</properties>
 	
 	<dependencies>
+		<dependency>
+			<groupId>pl.nk</groupId>
+			<artifactId>spring-social-nk</artifactId>
+			<version>${pl.nk.spring-social-nk}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.social</groupId>
 			<artifactId>spring-social-core</artifactId>
@@ -107,6 +114,12 @@
 			<artifactId>mockito-all</artifactId>
 			<version>${org.mockito.mockito-all.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.shindig</groupId>
+			<artifactId>shindig-common</artifactId>
+			<version>${org.apache.shindig.shindig-common}</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

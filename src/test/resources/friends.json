@@ -1,0 +1,31 @@
+{
+	"startIndex":1,
+	"itemsPerPage":2,
+	"totalResults":2,
+	"entry":[
+		{
+			"id":"37877",
+			"displayName":"Karol B³a¿ejowski",
+			"name":"Karol",			
+			"dateOfBirth":"09-07-1986",
+			"familyName":"B³a¿ejowski",
+			"age":26,
+			"gender":"male",
+			"profileUrl":"http://playarena.pl/37877,profil_zawodnika,rozgrywek_amatorskich,index.html",
+			"thumbnailUrl":"http://playarena.pl/images/default_user_img.png",
+			"aboutMe":":P"
+		},
+		{
+			"id":"37844",
+			"displayName":"Luka",
+			"name":"Luka",
+			"familyName":"just Luka",
+			"dateOfBirth":"04-04-1980",
+			"age":32,
+			"gender":"male",
+			"profileUrl":"http://playarena.pl/37844,profil_zawodnika,rozgrywek_amatorskich,index.html",
+			"thumbnailUrl":"http://playarena.pl/images/default_user_img.png",
+			"aboutMe":"Luka from Wro"
+		}
+	]
+}
