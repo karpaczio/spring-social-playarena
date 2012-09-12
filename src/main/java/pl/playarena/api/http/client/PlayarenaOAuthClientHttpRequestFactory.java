@@ -19,8 +19,16 @@ public class PlayarenaOAuthClientHttpRequestFactory implements ClientHttpRequest
     }
 
     public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
-        URI newUri = URI.create(uri.toString().concat("?access_token=").concat(accessToken).concat("&format=json"));
-        return delegate.createRequest(newUri, httpMethod);
+        String s = uri.toString();
+        StringBuffer newUri = new StringBuffer(s);
+
+        if (s.contains("?")) {
+            newUri.append("&");
+        } else {
+            newUri.append("?");
+        }
+        newUri.append("access_token=").append(accessToken).append("&format=json");
+        return delegate.createRequest(URI.create(newUri.toString()), httpMethod);
     }
 
 }
