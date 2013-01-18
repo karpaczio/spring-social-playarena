@@ -45,6 +45,25 @@ public class PlayarenaTemplateTest {
         Profile friend = friends.getEntry().get(1);
         assertEquals("37844", friend.getId());
     }
+    
+    @Test
+    public void getCurrentUserTeams() {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+        this.mockServer
+                .expect(requestTo(this.playarena
+                        .buildUri("/people/@teams", new LinkedMultiValueMap<String, String>())))
+                .andExpect(method(GET)).andRespond(withResponse(jsonResource("teams"), responseHeaders));
+        RestfulCollection<Team> teams = this.playarena.getCurrentUserTeams(null, null);
+
+        assertEquals(2, teams.getItemsPerPage());
+        assertEquals(0, teams.getStartIndex());
+        assertEquals(2, teams.getTotalResults());
+        Team team = teams.getEntry().get(0);
+        assertEquals("6505", team.getId());
+    }
 
     protected Resource jsonResource(String filename) {
         return new ClassPathResource("/" + filename + ".json", getClass());
