@@ -55,7 +55,37 @@ public class PlayarenaTemplate extends AbstractOAuth2ApiBinding implements Playa
                 TEAMS_TYPE_REFERENCE.getClass());
         return (RestfulCollection<Team>) obj;
     }
+    
+    @SuppressWarnings("unchecked")
+    public MsgResponse sendPrivateMessege(Integer recipientId, String title, String content){
+        MultiValueMap<String, String> requestData = new LinkedMultiValueMap<String, String>(3);
+        requestData.add("recipient_id", recipientId.toString());
+        requestData.add("title", title);
+        requestData.add("content", content);
+        MsgResponse response = getRestTemplate().postForObject(buildUri("/people/@msg", new LinkedMultiValueMap<String, String>()), requestData, MsgResponse.class);
+        return response;
+    }  
 
+    @SuppressWarnings("unchecked")
+    public TeamMsgResponse sendTeamMessege(Integer teamId, String title, String content){
+        MultiValueMap<String, String> requestData = new LinkedMultiValueMap<String, String>(3);
+        requestData.add("team_id", teamId.toString());
+        requestData.add("title", title);
+        requestData.add("content", content);
+        TeamMsgResponse response = getRestTemplate().postForObject(buildUri("/people/@team_msg", new LinkedMultiValueMap<String, String>()), requestData, TeamMsgResponse.class);
+        return response;
+    } 
+    
+    @SuppressWarnings("unchecked")
+    public TeamMsgResponse sendAllTeamsMessege(String title, String content){
+        MultiValueMap<String, String> requestData = new LinkedMultiValueMap<String, String>(2);
+        requestData.add("title", title);
+        requestData.add("content", content);
+        TeamMsgResponse response = getRestTemplate().postForObject(buildUri("/people/@team_msg", new LinkedMultiValueMap<String, String>()), requestData, TeamMsgResponse.class);
+        return response;
+    } 
+    
+    
     public PlayarenaTemplate(String accessToken) {
         super(accessToken);
         ClientHttpRequestFactory factory = new PlayarenaOAuthClientHttpRequestFactory(getRestTemplate()

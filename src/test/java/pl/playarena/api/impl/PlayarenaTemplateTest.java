@@ -2,6 +2,7 @@ package pl.playarena.api.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.social.test.client.RequestMatchers.method;
 import static org.springframework.social.test.client.RequestMatchers.requestTo;
 import static org.springframework.social.test.client.ResponseCreators.withResponse;
@@ -63,6 +64,53 @@ public class PlayarenaTemplateTest {
         assertEquals(2, teams.getTotalResults());
         Team team = teams.getEntry().get(0);
         assertEquals("6505", team.getId());
+    }
+    
+    @Test
+    public void sendPrivateMessege(){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        
+        this.mockServer
+                .expect(requestTo(this.playarena
+                        .buildUri("/people/@msg", new LinkedMultiValueMap<String, String>())))
+                .andExpect(method(POST)).andRespond(withResponse(jsonResource("private_msg_correct"), responseHeaders));
+        
+        MsgResponse response = this.playarena.sendPrivateMessege(1, "test", "test");
+        
+        assertEquals(response.isSuccess(), true);
+    }
+    
+    @Test
+    public void sendTeamMessege(){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        
+        this.mockServer
+                .expect(requestTo(this.playarena
+                        .buildUri("/people/@team_msg", new LinkedMultiValueMap<String, String>())))
+                .andExpect(method(POST)).andRespond(withResponse(jsonResource("team_msg_correct"), responseHeaders));
+        
+        TeamMsgResponse response = this.playarena.sendTeamMessege(1, "test", "test");
+        
+        assertEquals(response.isSuccess(), true);
+        assertEquals((int)response.getMsgCount(), 1);
+    }
+    
+    @Test
+    public void sendAllTeamsMessege(){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        
+        this.mockServer
+                .expect(requestTo(this.playarena
+                        .buildUri("/people/@team_msg", new LinkedMultiValueMap<String, String>())))
+                .andExpect(method(POST)).andRespond(withResponse(jsonResource("all_teams_msg_correct"), responseHeaders));
+        
+        TeamMsgResponse response = this.playarena.sendAllTeamsMessege("test", "test");
+        
+        assertEquals(response.isSuccess(), true);
+        assertEquals((int)response.getMsgCount(), 3);
     }
 
     protected Resource jsonResource(String filename) {
