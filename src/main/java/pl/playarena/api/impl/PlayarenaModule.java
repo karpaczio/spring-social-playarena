@@ -14,7 +14,7 @@ public class PlayarenaModule extends SimpleModule {
      * Constructor for NkModule.
      */
     public PlayarenaModule() {
-        super("PlayarenaModule", new Version(0, 0, 3, null));
+        super("PlayarenaModule", new Version(0, 0, 4, null));
     }
 
     /**

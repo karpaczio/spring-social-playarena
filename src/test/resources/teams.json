@@ -1,0 +1,14 @@
+{
+    "startIndex":0,
+    "itemsPerPage":2,
+    "totalResults":2,
+    "entry":[{
+        "id":"6505",
+        "name":"bushik-team",
+        "city":"Wrocław"
+    },{
+        "id":"12520",
+        "name":"bushik2",
+        "city":"Wrocław"
+    }]
+}
