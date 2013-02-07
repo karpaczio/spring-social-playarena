@@ -7,9 +7,11 @@ import org.codehaus.jackson.type.TypeReference;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
+import org.springframework.social.support.ClientHttpRequestFactorySelector;
 import org.springframework.social.support.URIBuilder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import pl.nk.social.api.http.converter.json.TypeReferenceJacksonMessageConverter;
 import pl.playarena.api.Playarena;
@@ -41,9 +43,9 @@ public class PlayarenaTemplate extends AbstractOAuth2ApiBinding implements Playa
                 PROFILES_TYPE_REFERENCE.getClass());
         return (RestfulCollection<Profile>) obj;
     }
-    
+
     @SuppressWarnings("unchecked")
-    public RestfulCollection<Team>  getCurrentUserTeams(Integer page, Integer itemsPerPage) {
+    public RestfulCollection<Team> getCurrentUserTeams(Integer page, Integer itemsPerPage) {
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>(2);
         if (page != null) {
             params.add("page", page.toString());
@@ -55,43 +57,41 @@ public class PlayarenaTemplate extends AbstractOAuth2ApiBinding implements Playa
                 TEAMS_TYPE_REFERENCE.getClass());
         return (RestfulCollection<Team>) obj;
     }
-    
+
     @SuppressWarnings("unchecked")
-    public MsgResponse sendPrivateMessege(Integer recipientId, String title, String content){
+    public MsgResponse sendPrivateMessege(Integer recipientId, String title, String content) {
         MultiValueMap<String, String> requestData = new LinkedMultiValueMap<String, String>(3);
         requestData.add("recipient_id", recipientId.toString());
         requestData.add("title", title);
         requestData.add("content", content);
         MsgResponse response = getRestTemplate().postForObject(buildUri("/people/@msg", new LinkedMultiValueMap<String, String>()), requestData, MsgResponse.class);
         return response;
-    }  
+    }
 
     @SuppressWarnings("unchecked")
-    public TeamMsgResponse sendTeamMessege(Integer teamId, String title, String content){
+    public TeamMsgResponse sendTeamMessege(Integer teamId, String title, String content) {
         MultiValueMap<String, String> requestData = new LinkedMultiValueMap<String, String>(3);
         requestData.add("team_id", teamId.toString());
         requestData.add("title", title);
         requestData.add("content", content);
         TeamMsgResponse response = getRestTemplate().postForObject(buildUri("/people/@team_msg", new LinkedMultiValueMap<String, String>()), requestData, TeamMsgResponse.class);
         return response;
-    } 
-    
+    }
+
     @SuppressWarnings("unchecked")
-    public TeamMsgResponse sendAllTeamsMessege(String title, String content){
+    public TeamMsgResponse sendAllTeamsMessege(String title, String content) {
         MultiValueMap<String, String> requestData = new LinkedMultiValueMap<String, String>(2);
         requestData.add("title", title);
         requestData.add("content", content);
         TeamMsgResponse response = getRestTemplate().postForObject(buildUri("/people/@team_msg", new LinkedMultiValueMap<String, String>()), requestData, TeamMsgResponse.class);
         return response;
-    } 
-    
-    
+    }
+
     public PlayarenaTemplate(String accessToken) {
         super(accessToken);
         ClientHttpRequestFactory factory = new PlayarenaOAuthClientHttpRequestFactory(getRestTemplate()
                 .getRequestFactory(), accessToken);
-        getRestTemplate().setRequestFactory(factory);
-
+        getRestTemplate().setRequestFactory(ClientHttpRequestFactorySelector.bufferRequests(factory));
     }
 
     @Override
@@ -100,9 +100,13 @@ public class PlayarenaTemplate extends AbstractOAuth2ApiBinding implements Playa
         converter.getObjectMapper().registerModule(new PlayarenaModule());
         return converter;
     }
+    
+    @Override
+    protected void configureRestTemplate(RestTemplate restTemplate) {
+        restTemplate.setErrorHandler(new PlayarenaErrorHandler());
+    }
 
     protected URI buildUri(String path, MultiValueMap<String, String> parameters) {
         return URIBuilder.fromUri(PLAYARENA_URL_BASE + path).queryParams(parameters).build();
     }
-
 }

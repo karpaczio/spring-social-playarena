@@ -13,9 +13,11 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.social.test.client.MockRestServiceServer;
 import org.springframework.util.LinkedMultiValueMap;
+import pl.playarena.api.impl.exception.MessageException;
 
 public class PlayarenaTemplateTest {
 
@@ -79,6 +81,27 @@ public class PlayarenaTemplateTest {
         MsgResponse response = this.playarena.sendPrivateMessege(1, "test", "test");
         
         assertEquals(response.isSuccess(), true);
+    }
+    
+    @Test
+    public void sendPrivateMessegeUncorrectTitle(){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        
+        this.mockServer
+                .expect(requestTo(this.playarena
+                        .buildUri("/people/@msg", new LinkedMultiValueMap<String, String>())))
+                .andExpect(method(POST)).andRespond(withResponse(jsonResource("private_msg_uncorrect_title"), responseHeaders, HttpStatus.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE"));
+        String exceptionMessage = "";
+        Class exceptionClass = null;
+        try{
+            MsgResponse response = this.playarena.sendPrivateMessege(1, "test", "test");
+        } catch (MessageException e){
+            exceptionClass = e.getClass();
+            exceptionMessage = e.getMessage();
+        }
+        assertEquals(exceptionMessage, "Title is too long");
+        assertEquals(exceptionClass, MessageException.class);
     }
     
     @Test
